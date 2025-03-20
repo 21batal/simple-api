@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const db = require("./database"); // Database connection
+const db = require("./database"); 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -12,7 +12,7 @@ app.use(cors());
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-// 🔹 Middleware to authenticate JWT
+
 const authenticateToken = (req, res, next) => {
     const token = req.header("Authorization");
     if (!token) return res.status(401).json({ message: "Unauthorized - No token provided" });
@@ -24,12 +24,12 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// 🔹 Root route
+
 app.get("/", (req, res) => {
     res.send("Welcome zoz!");
 });
 
-// 🔹 Sign up (Register)
+//  Signup
 app.post("/signup", async (req, res) => {
     const { name, username, password } = req.body;
     console.log("Signup request:", { name, username, password });
@@ -55,7 +55,7 @@ app.post("/signup", async (req, res) => {
     }
 });
 
-// 🔹 Login
+//  Login
 app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     console.log("Login request:", { username, password });
@@ -80,7 +80,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
-// 🔹 Update user info (Needs JWT)
+//  Update
 app.put("/users/:id", authenticateToken, async (req, res) => {
     const { name, username } = req.body;
     const userId = req.params.id;
@@ -95,7 +95,7 @@ app.put("/users/:id", authenticateToken, async (req, res) => {
     }
 });
 
-// 🔹 Add product (Needs JWT)
+//Add product 
 app.post("/products", authenticateToken, async (req, res) => {
     const { pname, description, price, stock } = req.body;
     console.log("Add product request:", { pname, description, price, stock });
@@ -112,7 +112,7 @@ app.post("/products", authenticateToken, async (req, res) => {
     }
 });
 
-// 🔹 Get all products (Needs JWT)
+// Get products 
 app.get("/products", authenticateToken, async (req, res) => {
     try {
         const [products] = await db.query("SELECT * FROM products");
@@ -123,7 +123,7 @@ app.get("/products", authenticateToken, async (req, res) => {
     }
 });
 
-// 🔹 Get single product by ID (Needs JWT)
+// Get product by ID 
 app.get("/products/:pid", authenticateToken, async (req, res) => {
     try {
         const [products] = await db.query("SELECT * FROM products WHERE pid = ?", [req.params.pid]);
@@ -135,7 +135,7 @@ app.get("/products/:pid", authenticateToken, async (req, res) => {
     }
 });
 
-// 🔹 Update product (Needs JWT)
+// Update product 
 app.put("/products/:pid", authenticateToken, async (req, res) => {
     const { pname, description, price, stock } = req.body;
     console.log("Update product request:", { pname, description, price, stock });
@@ -151,7 +151,7 @@ app.put("/products/:pid", authenticateToken, async (req, res) => {
     }
 });
 
-// 🔹 Delete product (Needs JWT)
+// Delete product 
 app.delete("/products/:pid", authenticateToken, async (req, res) => {
     try {
         await db.query("DELETE FROM products WHERE pid = ?", [req.params.pid]);
